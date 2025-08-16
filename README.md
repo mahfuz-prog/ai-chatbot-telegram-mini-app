@@ -1,7 +1,8 @@
 # Telegram mini app. Ai chatbot
 
 ## High-Level Architecture
-<img width="896" height="2230" alt="telegram-mini-app" src="https://github.com/user-attachments/assets/def5d855-3fc3-4aec-a5e8-8ab55c2aa194" />
+<img width="896" height="2230" alt="telegram-mini-app" src="https://github.com/user-attachments/assets/2c96bc43-eff3-488b-81fd-1326c6ee2eef" />
+<img width="909" height="1503" alt="mini-app-ui" src="https://github.com/user-attachments/assets/aeb883c6-b463-4fbb-b59e-2c3d8c8251a8" />
 
 ## Overview
 
