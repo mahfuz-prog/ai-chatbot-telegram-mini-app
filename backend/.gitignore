@@ -1,0 +1,21 @@
+# Python cache
+*.pyc
+__pycache__/
+
+# Django migrations caches
+**/migrations/__pycache__/
+migrations/
+
+# Env files
+.env
+.env.local
+venv/
+
+# Logs
+*.log
+
+db.sqlite3
+
+# IDE settings
+.vscode/
+.idea/
