@@ -6,4 +6,5 @@ from utils.helper import check_tg_data_string
 @api_view(["GET"])
 @check_tg_data_string
 def get_user(request, current_user):
-	return JsonResponse({}, status=200)
+    print(current_user)
+    return JsonResponse({}, status=200)

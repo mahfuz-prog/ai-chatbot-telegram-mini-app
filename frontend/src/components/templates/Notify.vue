@@ -49,7 +49,6 @@ defineExpose({ showNotify })
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   min-width: 220px;
   max-width: 80vw;
-  height: auto;
 }
 
 .notify.success {

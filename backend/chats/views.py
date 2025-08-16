@@ -16,6 +16,8 @@ def list_user_chat(request, current_user):
     # Get all chats associated with the current_user, ordered by updated_at
     chats = Chat.objects.filter(user=current_user)
 
+    print(chats)
+
     # Serialize the queryset. 'many=True' indicates that we are serializing a list of objects.
     serializer = ChatSerializer(chats, many=True)
     return JsonResponse({"chat_list": serializer.data}, status=200)

@@ -1,21 +1,30 @@
 import os
 from pathlib import Path
 from corsheaders.defaults import default_headers
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["mahfuz-prog.xyz"]
+ALLOWED_HOSTS = ["mahfuz-prog.xyz", "localhost", "127.0.0.1"]
 
 # cros origins
-CORS_ALLOWED_ORIGINS = ["http://mahfuz-prog.xyz", "https://mahfuz-prog.xyz"]
+CORS_ALLOWED_ORIGINS = [
+    "http://mahfuz-prog.xyz",
+    "https://mahfuz-prog.xyz",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
 CORS_PREFLIGHT_MAX_AGE = 1800
 

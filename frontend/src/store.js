@@ -9,10 +9,10 @@ import config from "../../frontend_config.json"
 // auth info
 const authState = reactive({
 	SERVER_ADDR: config.SERVER_ADDR,
-	userName: "",
-    firstName: "",
-    lastName: "",
-    profilePic: ""
+	userName: "mahfuz5676",
+    firstName: "Mahfuz",
+    lastName: "Rahman",
+    profilePic: "https://t.me/i/userpic/320/zF4ipl95HZ3J3ZK5TNHrl6dj87Ai1RWUwEI8ZUCKaqnw_G7kp67smDoKmx8xLvjn.svg"
 })
 
 const authActions = {
