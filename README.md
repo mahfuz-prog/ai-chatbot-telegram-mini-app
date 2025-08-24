@@ -1,7 +1,7 @@
 # Telegram mini app. Ai chatbot
 
 ## High-Level Architecture
-<img width="896" height="2230" alt="telegram-mini-app" src="https://github.com/user-attachments/assets/2c96bc43-eff3-488b-81fd-1326c6ee2eef" />
+<img width="896" height="2230" alt="telegram-mini-app" src="https://github.com/user-attachments/assets/4efbb23b-f8db-4ab6-a688-412712ad9b9c" />
 <img width="909" height="1503" alt="mini-app-ui" src="https://github.com/user-attachments/assets/aeb883c6-b463-4fbb-b59e-2c3d8c8251a8" />
 
 ## Overview
@@ -69,3 +69,4 @@ This application highlights system design, API development, AI integration, and 
 * VM Firewall restricts access to backend services.
 
 * CORS ensures secure frontend-backend communication.
+
