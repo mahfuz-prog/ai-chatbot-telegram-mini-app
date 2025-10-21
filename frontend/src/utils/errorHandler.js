@@ -33,7 +33,6 @@ export function viewErrorHandler({ store, errorRef }) {
 	    }
 	  } else {
 	    // This branch catches general JavaScript runtime errors
-	    // (e.g., TypeError, ReferenceError, or custom Error objects)
 	    errorRef.value = "An unknown error occurred."
 	    return false
 	  }

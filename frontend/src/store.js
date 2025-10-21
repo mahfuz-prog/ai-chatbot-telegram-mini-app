@@ -1,18 +1,14 @@
 import { reactive, readonly } from "vue"
 
-// configuration file
-// import config from '/etc/frontend_config.json'
+// for development, in production state will be empty string
+const useFakeUser = import.meta.env.VITE_USE_FAKE_USER === 'true'
 
-// development
-import config from "../../frontend_config.json"
-
-// auth info
 const authState = reactive({
-	SERVER_ADDR: config.SERVER_ADDR,
-	userName: "",
-    firstName: "",
-    lastName: "",
-    profilePic: ""
+  SERVER_ADDR: import.meta.env.VITE_SERVER_ADDR,
+  userName: useFakeUser ? import.meta.env.VITE_USER_NAME : "",
+  firstName: useFakeUser ? import.meta.env.VITE_FIRST_NAME : "",
+  lastName: useFakeUser ? import.meta.env.VITE_LAST_NAME : "",
+  profilePic: useFakeUser ? import.meta.env.VITE_PROFILE_PIC : "",
 })
 
 const authActions = {

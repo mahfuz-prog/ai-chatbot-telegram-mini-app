@@ -1,29 +1,27 @@
 import os
 from pathlib import Path
 from corsheaders.defaults import default_headers
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
-DEBUG = False
-
-ALLOWED_HOSTS = ["mahfuz-prog.xyz"]
-
-# cros origins
-CORS_ALLOWED_ORIGINS = ["http://mahfuz-prog.xyz", "https://mahfuz-prog.xyz"]
-
-CORS_PREFLIGHT_MAX_AGE = 1800
-
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(",")
+CORS_PREFLIGHT_MAX_AGE = int(os.getenv("CORS_PREFLIGHT_MAX_AGE"))
 CORS_ALLOW_HEADERS = list(default_headers) + ["X-Telegram-Init-Data"]
+
 
 # Application definition
 INSTALLED_APPS = [
-    # my installation
     "rest_framework",
     "users.apps.UsersConfig",
     "chats.apps.ChatsConfig",
@@ -37,8 +35,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "corsheaders.middleware.CorsMiddleware",  # cros
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",

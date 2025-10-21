@@ -1,14 +1,12 @@
 <script setup>
 import { ref, inject, onMounted, onUnmounted } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
-import { useNotify } from './components/composables/useNotify'
 
 import axios from 'axios'
 import ContentSkeleton from './components/homepage/ContentSkeleton.vue'
 
 const store = inject("store")
 const router = useRouter()
-const notify = useNotify()
 
 const loading = ref(false)
 const error = ref(false)
@@ -34,10 +32,9 @@ onMounted(async() => {
     store.authActions.setAuthInfo(user)
   } catch (err) {
     // if error occured close the telegram app
-    if (err.response.status === 401 || err.response.status === 403) {
+    if (err.response && (err.response.status === 401 || err.response.status === 403)) {
       telegramClient.close()
     }
-    notify.show('Error', 'Something went wrong!', 'error')
   } finally {
     loading.value = false
   }

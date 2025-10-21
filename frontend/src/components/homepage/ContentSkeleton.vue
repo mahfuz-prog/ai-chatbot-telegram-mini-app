@@ -18,7 +18,7 @@
   width: 36px;
   height: 36px;
   border: 4px solid rgba(255, 255, 255, 0.2);
-  border-top-color: var(--accent, #4fc3f7);
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

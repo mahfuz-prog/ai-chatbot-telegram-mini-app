@@ -8,7 +8,14 @@ import { createApp } from 'vue'
 
 // server address
 axios.defaults.baseURL = store.authState.SERVER_ADDR
-axios.defaults.headers.common['X-Telegram-Init-Data'] = window.Telegram.WebApp.initData
+
+const useFakeUser = import.meta.env.VITE_USE_FAKE_USER === 'true'
+
+if (useFakeUser) {
+	axios.defaults.headers.common['X-Telegram-Init-Data'] = import.meta.env.VITE_FAKE_INIT_DATA
+} else {
+	axios.defaults.headers.common['X-Telegram-Init-Data'] = window.Telegram.WebApp.initData
+}
 
 const app = createApp(App)
 
