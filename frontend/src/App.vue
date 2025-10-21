@@ -49,9 +49,9 @@ onUnmounted(() => {
 </script>
 <template>
   <main>
-    <div v-if="!error">
+    <template v-if="!error">
       <RouterView v-if="!loading" />
-    </div>
+    </template>
     <div class="error" v-else>
       <i><h1>Only accessable from telegram mini app</h1></i>
     </div>
@@ -60,13 +60,24 @@ onUnmounted(() => {
 </template>
 
 <style>
-main {
+html,
+body,
+#app {
+  height: 100%;
   width: 100%;
-  height: 100%
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .error {
-  height: 100%;
+  flex: 1;
   display: grid;
   place-content: center;
 }

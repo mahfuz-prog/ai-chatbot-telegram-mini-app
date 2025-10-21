@@ -37,7 +37,7 @@ const store = inject("store")
 @media (max-width: 768px) {
   .hero {
     width: 100%;
-    height: calc(100% - 70px);
+    height: 100%;
     padding: 20px;
   }
   .title {

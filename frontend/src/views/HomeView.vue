@@ -40,7 +40,7 @@ onErrorCaptured(viewErrorHandlerCallback)
 
 <style scoped>
 .page {
-  height: calc(100vh - 112px);
+  height: 100%;
   background-color: var(--primary-black);
 }
 </style>
