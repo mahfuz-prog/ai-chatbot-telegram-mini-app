@@ -1,0 +1,15 @@
+.env
+db.sqlite3
+Dockerfile
+venv
+.gitignore
+*.pyc
+__pycache__/
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.mo

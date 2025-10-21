@@ -1,0 +1,16 @@
+FROM node:22.14.0
+
+WORKDIR /frontend
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+# Optional: run security fix (only if you really need it)
+# RUN npm audit fix || true
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host"]

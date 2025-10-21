@@ -64,9 +64,19 @@ GENAI_API=""
 BOT_TOKEN=""
 VALID_AUTH_DATE_WINDOW_SECONDS=360000000000000000000000
 WEATHER_API=""
+DB_HOST=postgresdb
+POSTGRES_DB=app
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
 ```
 
-### Database Migration
+### Create image & run container application layer
+```bash
+docker build -t django-backend:dev .
+docker run --name django-app --env-file .env -p8000:8000 django-backend:dev
+```
+
+### Database Migration if running without docker
 ```bash
 python manage.py makemigrations users
 python manage.py makemigrations chats
@@ -86,16 +96,34 @@ VITE_PROFILE_PIC=https://t.me/i/userpic/320/zF4ipl95HZ3J3ZK5TNHrl6dj87Ai1RWUwEI8
 VITE_FAKE_INIT_DATA=query_id=AAEPsHoIAwAAAA-weghhrZhz&user=%7B%22id%22%3A6584709135%2C%22first_name%22%3A%22Mahfuz%22%2C%22last_name%22%3A%22Rahman%22%2C%22username%22%3A%22mahfuz5676%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2FzF4ipl95HZ3J3ZK5TNHrl6dj87Ai1RWUwEI8ZUCKaqnw_G7kp67smDoKmx8xLvjn.svg%22%7D&auth_date=1755325669&signature=d-tB-7rgB-2hQWiihLDkYkK52uRXQbjzL5CIqel6WZBZMd_ISJoUY04ItkODYzd-MvxbQjW-6yvgGqjD-0_GBg&hash=e2b90c067a2db136301d428fbf088ec99334c8b679f2ec866a004b179abd07f7
 ```
 
+### Create image & run container application layer
+```bash
+docker build -f Dockerfile-dev -t vue-frontend:dev .
+docker run --name vue-app --env-file .env -p5173:5173 vue-frontend:dev
+```
 
-# Production
+## Run development environment, docker compose
+```bash
+docker compose -f dev-docker-compose.yml up
+docker compose -f dev-docker-compose.yml down
+```
+
+
+# Production Service-based architecture
 =================================================
 
+**Run entire application using docker compose.**
+- .env for backend and frontend
+- update nginx.conf in frontend according to backend url
+- build the vue app locally
+- In one container nginx + vue build(/dist)
+
 ## Backend
-### Change in `.env` for production
+### Override `.env` variable from `docker-compose.yml`
 ```sh
-DEBUG=False
-ALLOWED_HOSTS=""
-CORS_ALLOWED_ORIGINS=""
+environment:
+  - DEBUG=False
+  - CORS_ALLOWED_ORIGINS=http://localhost:8080
 ```
 
 ## Frontend
@@ -109,4 +137,10 @@ VITE_USE_FAKE_USER=false
 ```sh
 npm install
 npm run build -- --mode production
+```
+
+## Run entire app in production
+```bash
+docker compose up -d
+docker compose down
 ```
