@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Chat, Message, ChatContext
+from .models import Chat, Message
 
 
 # serialize chat without messages
@@ -25,13 +25,6 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ["id", "sender", "content", "timestamp"]
         read_only_fields = ["id", "timestamp"]
-
-
-# serialize context
-class ChatContextSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChatContext
-        fields = ["context_data", "updated_at"]
 
 
 # serialize chat with messages

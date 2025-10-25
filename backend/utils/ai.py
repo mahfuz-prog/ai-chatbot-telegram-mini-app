@@ -1,16 +1,15 @@
 import os
 import json
 import logging
-import requests
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
+from utils.helper import get_current_weather
 
 load_dotenv()
 
 # config
 GENAI_API = os.getenv("GENAI_API")
-WEATHER_API = os.getenv("WEATHER_API")
 
 # https://ai.google.dev/gemini-api/docs
 gemini_client = genai.Client(api_key=GENAI_API)
@@ -34,16 +33,6 @@ TITLE_GENERATION_INSTRUCTION = (
     "generated title text. Do not include any quotation marks, introductory "
     "phrases, or explanations. The title must be in 3 to 5 word."
 )
-
-
-# API call for get current weather data
-def get_current_weather(location: str) -> str:
-    url = f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={location}"
-    try:
-        return requests.get(url).text
-    except Exception as e:
-        logging.error(f"Failed to pull weather info. Error: {str(e)}")
-        return "Failed to fetching weather data!"
 
 
 def generate_model_response(history):

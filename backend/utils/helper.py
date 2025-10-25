@@ -4,6 +4,7 @@ import json
 import time
 import logging
 import hashlib
+import requests
 from functools import wraps
 from urllib.parse import parse_qsl
 from users.models import User
@@ -14,6 +15,20 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 VALID_AUTH_DATE_WINDOW_SECONDS = int(os.getenv("VALID_AUTH_DATE_WINDOW_SECONDS"))
+WEATHER_API = os.getenv("WEATHER_API")
+
+
+# API call for get current weather data
+def get_current_weather(location: str) -> str:
+    url = f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={location}"
+    try:
+        response = requests.get(url)
+        if "error" in response.json():
+            return "Failed to fetching weather data!"
+        return response.text
+    except Exception as e:
+        logging.error(f"Failed to pull weather info. Error: {str(e)}")
+        return "Failed to fetching weather data!"
 
 
 # decorator for views
