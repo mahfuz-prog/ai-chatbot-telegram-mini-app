@@ -58,7 +58,7 @@ const deleteChat = async(chatId) => {
     <div class="chat-history" v-if="store.chatState.chatList.size > 0">
       <div class="chats">
         <div v-for="[idx, chat] in store.chatState.chatList" :key="idx" class="chat-item">
-          <button @click="goToChat(chat.unique_hex_id)" class="select-button" :disabled="isLoading"> {{ chat.title }}... </button>
+          <button @click="goToChat(chat.unique_hex_id)" class="select-button" :disabled="isLoading"> {{ chat.title }} </button>
           <button @click="deleteChat(idx)" :disabled="isLoading" class="delete-button">
             <DeleteIcon :width="16" :height="18" :iconFillColor="isLoading ? '#a0a0a0' : '#dc3545'" />
           </button>

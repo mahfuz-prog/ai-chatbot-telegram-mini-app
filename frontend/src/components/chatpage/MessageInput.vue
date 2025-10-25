@@ -76,6 +76,11 @@ const sendMessage = async() => {
     nextTick(() => {
       store.activeChatActions.addMessage(data.user)
       store.activeChatActions.addMessage(data.model)
+
+      // if there is a title in response
+      if (data.title) {
+        store.activeChatActions.setActiveChatTitle(data.title)
+      }
     })
   } catch (err) {
     store.activeChatActions.removeMessageById(tempId)

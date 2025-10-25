@@ -9,6 +9,8 @@ class Chat(models.Model):
     represent a single conversation
     """
 
+    DEFAULT_TITLE = "New Chat"
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats")
     unique_hex_id = models.CharField(
         max_length=20,
@@ -16,7 +18,7 @@ class Chat(models.Model):
         blank=True,
         null=True,  # Allow NULL in database for existing records before migration
     )
-    title = models.CharField(max_length=35, default="New Chat")
+    title = models.CharField(max_length=35, default=DEFAULT_TITLE)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -25,10 +25,7 @@ watch(
 )
 </script>
 <template>
-  <h3 v-if="store.activeChatState.messages.size > 0 && store.activeChatState.title === 'New Chat'">
-    {{ store.activeChatState.messages.values().next().value.content.slice(0, 35) }}...
-  </h3>
-  <h3 v-else>{{ store.activeChatState.title }}</h3>
+  <h3>{{ store.activeChatState.title }}</h3>
   <hr />
   <div class="chat-messages">
     <template v-if="store.activeChatState.messages.size > 0">

@@ -102,6 +102,10 @@ const activeChatActions = {
         })
     },
 
+    setActiveChatTitle(title) {
+        activeChatState.title = title
+    },
+
     addMessage(newMessage) {
         activeChatState.messages.set(newMessage.id, newMessage)
     },
