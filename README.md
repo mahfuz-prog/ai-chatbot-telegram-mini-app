@@ -1,4 +1,4 @@
-# Telegram mini app. Ai chatbot
+# Telegram AI Chatbot Mini App
 
 ## High-Level Architecture
 <img width="896" height="2230" alt="telegram-mini-app" src="https://github.com/user-attachments/assets/4efbb23b-f8db-4ab6-a688-412712ad9b9c" />
@@ -6,47 +6,70 @@
 
 ## Overview
 
-This project is a Telegram Mini App that integrates a conversational AI-powered chatbot with a secure, scalable web application. The chatbot runs inside Telegram, with a Vue.js frontend injected into the Telegram webview and a Django REST backend handling authentication, authorization, conversation management, and AI integration.
+This project is a Telegram Mini App integrating an **Agentic AI (GraphBit)** powered chatbot with a secure, scalable web application. The chatbot runs inside Telegram, with a Vue.js frontend injected into the Telegram webview and a Django REST backend managing authentication, authorization, conversation flow, and AI processing.
 
-**The system demonstrates advanced full-stack engineering by combining:**
-* Real-time chat within Telegram
-* Secure Telegram query validation - HMAC
-* A Gemini AI model for natural language responses and function calling
-* Weather API integration for external data fetching
+## Key highlights of this project include:
+* **Agentic AI framework (Graphbit)** for autonomous reasoning and task execution
+* Real-time chat within Telegram Mini App
+* Secure Telegram query validation via HMAC
+* Weather API integration for dynamic responses
+* Full-stack development using Vue.js frontend and Django REST backend
+* Production-ready deployment with Docker and PostgreSQL
+* Robust logging and comprehensive automated tests
+* This application highlights system design, API development, AI integration, and cloud deployment skills.
 
-This application highlights system design, API development, AI integration, and cloud deployment skills.
 
-## Flow Overview
+## System Architecture
+### Telegram Mini App Integration
+* The chatbot is launched inside Telegram as a Mini App.
+* Telegram injects the window.Telegram object into the frontend, providing authorized user details.
+* A secure bot token validates the user via HMAC-verified query strings.
 
-#### Telegram App Integration
-* The chatbot is launched as a Telegram Mini App.
-* Telegram injects the window.Telegram object into the frontend, providing a telegram authorized user details.
-* A private bot token validates user authenticity by generating and verifying secure query strings with Telegram servers.
-
-#### Frontend (Vue.js)
-* A responsive Vue.js SPA runs inside Telegram’s webview.
-* Handles user interaction, chat interface, and sends API requests to the backend.
+### Frontend (Vue.js)
+* Responsive single-page application (SPA) running inside Telegram webview.
+* Handles user interactions and sends API requests to the backend.
+* Uses CORS and secure headers to communicate safely with the Django backend.* A responsive Vue.js SPA runs inside Telegram’s webview.
 
 #### Backend (Django REST + Gunicorn + Nginx)
 * Nginx serves as reverse proxy and SSL terminator.
-* Gunicorn runs the Django server handling API requests.
-* Django validates Telegram query strings, ensuring only authenticated users can access the system.
-* The chatbot engine processes messages, integrates with the Gemini AI model, and triggers function calls.
+* Gunicorn runs the Django server to handle REST API requests.
+* Django validates Telegram query strings and ensures only authorized users can access services.
+* Agentic AI framework (Graphbit) processes messages and handles automated tasks.
+* Logging is integrated throughout the application to track errors, warnings, and debug information.
 
-#### AI Model Integration (Gemini)
-* The AI chatbot uses Gemini 2.5 for generating intelligent responses.
-* Fetching weather data from an external Weather API.
-* Returning contextual responses based on stored chat history.
+#### AI Agent (Graphbit)
+* Replaces previously used Gemini AI for autonomous reasoning and task execution.
+* Maintains conversational context and can call external functions (e.g., Weather API).
+* Generates intelligent, contextual responses to user messages.
 
 #### Database - SQLite
-* Users: Telegram IDs, usernames, join timestamps.
-* Chats: Chat sessions with unique identifiers.
-* Messages: Full conversation history.
-* Chat Contexts: Context data for preserving conversational memory.
+* PostgreSQL for production-grade, reliable storage.
+* SQLite may be used in development for simplicity
+**Schema**
+`Users`: Telegram IDs, usernames, join timestamps
+`Chats`: Chat sessions with unique identifiers
+`Messages`: Full conversation history
+`ChatContext`: Persistent context for conversation memory
 
 #### Security & Scalability
-* VM Firewall restricts access to backend services.
-* CORS ensures secure frontend-backend communication.
+* HMAC validation ensures only authentic Telegram users can interact.
+* CORS configuration protects frontend-backend communication.
+* PostgreSQL enables production-grade reliability and scaling.
+* Docker containers provide reproducible and isolated environments.
+* Logging system captures errors, warnings, and debug info across services.
+
+#### Testing
+* Unit tests cover models, serializers, services, and decorators.
+* Integration tests validate full chat flow including AI responses.
+* Run tests: `python manage.py test`
+
+
+# Third party service integration
+## Create account and get an free api key
+* (OpenRouter -> Interface for LLMs)[https://openrouter.ai/settings/keys]
+* (weatherapi -> Realtime weather update)[https://www.weatherapi.com/docs/]
+* (Telegram bot config)[https://core.telegram.org/bots/webapps]
+* (Bot Token: BotFather -> /newbot -> Token)[https://web.telegram.org/a/]
 
  
 # Development
@@ -60,10 +83,10 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1,example.com
 CORS_ALLOWED_ORIGINS=http://localhost:5173,https://example.com
 CORS_PREFLIGHT_MAX_AGE=1800
-GENAI_API=""
 BOT_TOKEN=""
-VALID_AUTH_DATE_WINDOW_SECONDS=360000000000000000000000
 WEATHER_API=""
+OPENROUTER_API_KEY=""
+VALID_AUTH_DATE_WINDOW_SECONDS=360000000000000000000000
 DB_HOST=postgresdb
 POSTGRES_DB=app
 POSTGRES_USER=user

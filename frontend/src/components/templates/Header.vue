@@ -1,12 +1,14 @@
 <script setup>
 import { inject } from 'vue'
+import { useRouter } from "vue-router"
 
 const store = inject("store")
+const router = useRouter()
 </script>
 <template>
   <header>
-    <img :src="store.authState.profilePic">
-    <span>{{ store.authState.userName }}</span>
+    <img :src="store.authState.profilePic" @click="router.push({name: 'home'})">
+    <span @click="router.push({name: 'home'})">{{ store.authState.userName }}</span>
   </header>
 </template>
 

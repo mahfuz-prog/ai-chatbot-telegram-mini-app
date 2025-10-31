@@ -25,8 +25,10 @@ watch(
 )
 </script>
 <template>
+  <!-- <div> -->
   <h3>{{ store.activeChatState.title }}</h3>
   <hr />
+  <!-- </div> -->
   <div class="chat-messages">
     <template v-if="store.activeChatState.messages.size > 0">
       <div v-for="[idx, msg] in Array.from(store.activeChatState.messages)" :key="idx" :class="['message-row', msg.sender === 'user' ? 'user' : 'model']">
@@ -64,7 +66,6 @@ watch(
     font-size: 15px;
     padding: 20px 0 70px;
     scroll-behavior: smooth;
-    max-height: 100vh;
     overflow: hidden;
   }
   .message-row {

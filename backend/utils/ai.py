@@ -1,19 +1,13 @@
 import os
-import json
-import logging
-from google import genai
-from google.genai import types
 from dotenv import load_dotenv
+from graphbit import LlmClient
 from utils.helper import get_current_weather
+from graphbit import init, LlmConfig, Executor, Workflow, Node
 
 load_dotenv()
 
-# config
-GENAI_API = os.getenv("GENAI_API")
-
-# https://ai.google.dev/gemini-api/docs
-gemini_client = genai.Client(api_key=GENAI_API)
-
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 SYSTEM_INSTRUCTION = (
     "You are a helpful and friendly assistant and your name is 'Vulval bot'."
@@ -22,7 +16,7 @@ SYSTEM_INSTRUCTION = (
     "Then, create a new, concise summary of the *entire conversation so far*. "
     "The summary should capture key details, questions, and themes to inform future turns."
     "The summary is for your internal context, so compress it as much as you can."
-    "The final response must be a JSON object string with two keys: "
+    "The final response must be a **plain JSON string**, without backticks, code blocks, or any other formatting."
     "'reply' for the user message and 'context_summary' for the updated conversation context."
 )
 
@@ -35,65 +29,43 @@ TITLE_GENERATION_INSTRUCTION = (
 )
 
 
-def generate_model_response(history):
-    # pass the history with current question, tool calling functionality
-    model = gemini_client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=history,
-        config=types.GenerateContentConfig(
-            max_output_tokens=1000,
-            temperature=0.3,
-            system_instruction=SYSTEM_INSTRUCTION,
+class WeatherInformationPipeline:
+    def __init__(self, api_key: str = OPENROUTER_API_KEY, model: str = "gpt-4o-mini"):
+        init(log_level="info", enable_tracing=False)
+        self.llm_config = LlmConfig.openrouter(api_key=api_key, model=model)
+        self.executor = Executor(self.llm_config, timeout_seconds=60, debug=DEBUG)
+        self.client = LlmClient(self.llm_config, debug=DEBUG)
+
+    def create_workflow(self, query: str, context_summary: str) -> Workflow:
+        workflow = Workflow("Instant Weather Pull")
+
+        fetch_node = Node.agent(
+            name="Weather Agent",
+            prompt=f"""{SYSTEM_INSTRUCTION} Previous conversation summary: {context_summary} User message: {query}""",
+            agent_id="weather_agent",
             tools=[get_current_weather],
-        ),
-    )
-
-    return model.text
-
-
-def prepare_gemini_history(chat, user_message_content):
-    """Prepares the conversation history for the LLM."""
-    gemini_history = []
-
-    # If there's an existing context, add it as a system instruction or initial prompt
-    if hasattr(chat, "context") and chat.context.context_data:
-        context_data = chat.context.context_data
-        # Place context as the first user message for the model to use it
-        gemini_history.append(
-            {"role": "user", "parts": [{"text": f"System Context: {context_data}"}]}
         )
 
-    # Add the current user's message
-    gemini_history.append({"role": "user", "parts": [{"text": user_message_content}]})
+        workflow.add_node(fetch_node)
+        workflow.validate()
+        return workflow
 
-    return gemini_history
+    def chat(self, query: str, context_summary: str):
+        """Run the simplified workflow."""
+        workflow = self.create_workflow(query, context_summary)
+        result = self.executor.execute(workflow)
 
+        if result.is_success():
+            return result.get_node_output("Weather Agent")
+        else:
+            error_msg = result.get_error()
+            raise Exception(f"WeatherInformationPipeline failed! Error: {error_msg}")
 
-def extract_json_from_model_response(data):
-    """
-    data look like
+    def generate_title(self, first_message_content, model_reply):
+        response = self.client.complete(
+            prompt=f"{TITLE_GENERATION_INSTRUCTION} user_input: {first_message_content}, model_response: {model_reply}",
+            max_tokens=5,
+            temperature=0.7,
+        )
 
-        ```json
-            {
-                "reply": "",
-                "context_summary": ""
-            }
-        ```
-    """
-    try:
-        response_content = json.loads(data[7:-3])
-        model_reply = response_content["reply"]
-        new_context = response_content["context_summary"]
-        return (model_reply, new_context)
-    except Exception as e:
-        logging.error(f"Failed to extract data from model response. error {str(e)}")
-        raise
-
-
-def generate_chat_title(first_message_content, model_reply):
-    response = gemini_client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=f"{TITLE_GENERATION_INSTRUCTION} user_input: {first_message_content}, model_response: {model_reply}",
-    )
-
-    return response.text
+        return response

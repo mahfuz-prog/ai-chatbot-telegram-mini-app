@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.http import JsonResponse
 from unittest.mock import patch
 from users.models import User
-from chats.models import Chat, Message
+from chats.models import Chat, Message, ChatContext
 from chats import service
 
 
@@ -57,37 +57,59 @@ class InboxServiceTests(TestCase):
     def setUp(self):
         self.user = User.objects.create(telegram_id=2222, username="alice")
         self.chat = Chat.objects.create(user=self.user)
+        self.context = ChatContext.objects.create(
+            chat=self.chat, context_data="no context availabl"
+        )
 
-    @patch("chats.service.generate_chat_title", return_value="Auto Title")
+    @patch("chats.service.check_chat_permission", return_value=None)
     @patch(
-        "chats.service.extract_json_from_model_response",
-        return_value=("Model Reply", '{"context": "new"}'),
+        "chats.service.extract_data_from_model_response",
+        return_value=("Model Reply", {"context": "new"}),
     )
-    @patch("chats.service.generate_model_response", return_value={"mock": "response"})
-    @patch("chats.service.prepare_gemini_history", return_value=[])
-    def test_inbox_success_flow(self, mock_history, mock_gen, mock_extract, mock_title):
+    @patch(
+        "chats.service.WeatherInformationPipeline.generate_title",
+        return_value="Auto Title",
+    )
+    @patch(
+        "chats.service.WeatherInformationPipeline.chat",
+        return_value={"reply": "Weather is sunny."},
+    )
+    def test_inbox_success_flow(
+        self, mock_chat, mock_title, mock_extract, mock_permission
+    ):
+        """Test successful inbox flow with mocked pipeline"""
         data = {"chat_id": self.chat.id, "content": "Hello AI"}
+
         response = service.inbox(data, self.user)
         response_data = json.loads(response.content)
+
         self.assertEqual(response.status_code, 200)
         self.assertIn("model", response_data)
         self.assertTrue(Message.objects.filter(chat=self.chat).count() >= 2)
+        self.assertEqual(response_data.get("title"), "Auto Title")
 
     def test_inbox_invalid_data(self):
+        """Test invalid request data returns 400"""
         data = {"chat_id": "invalid", "content": ""}
         response = service.inbox(data, self.user)
         self.assertEqual(response.status_code, 400)
 
     def test_inbox_chat_not_found(self):
+        """Test when chat ID doesn’t exist returns 404"""
         data = {"chat_id": 9999, "content": "Hello?"}
         response = service.inbox(data, self.user)
         self.assertEqual(response.status_code, 404)
 
-    @patch("chats.service.generate_model_response", side_effect=Exception("AI error"))
-    @patch("chats.service.prepare_gemini_history", return_value=[])
-    def test_inbox_ai_failure(self, mock_hist, mock_ai):
+    @patch(
+        "chats.service.WeatherInformationPipeline.chat",
+        side_effect=Exception("AI error"),
+    )
+    def test_inbox_ai_failure(self, mock_ai):
+        """Test when pipeline.chat fails returns 500"""
         data = {"chat_id": self.chat.id, "content": "Test error"}
+
         response = service.inbox(data, self.user)
         response_data = json.loads(response.content)
+
         self.assertEqual(response.status_code, 500)
         self.assertIn("error", response_data)

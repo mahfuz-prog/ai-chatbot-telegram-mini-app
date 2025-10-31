@@ -63,6 +63,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "djangoapp.wsgi.application"
+# ASGI_APPLICATION = "djangoapp.asgi.application"
 
 
 # Database

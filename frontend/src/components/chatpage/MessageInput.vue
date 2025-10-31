@@ -122,7 +122,7 @@ const autoResize = () => {
     left: 0;
     width: 100%;
     padding: 10px 16px;
-    background: transparent;
+    background: var(--primary-black);
     z-index: 100;
   }
   .input-box {
